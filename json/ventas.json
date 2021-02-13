@@ -1,0 +1,51 @@
+[{
+        "id": 1,
+        "cliente": {
+            "nombre": "Jose",
+            "apellidos": "",
+            "dni": "",
+            "fechaNac": "",
+            "email": "",
+            "contrasenya": "",
+            "id": 0
+        },
+        "productos": [{
+                "referencia": "01",
+                "descripcion": "",
+                "familia": "",
+                "precio": 0
+            },
+            {
+                "referencia": "02",
+                "descripcion": "",
+                "familia": "",
+                "precio": 0
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "cliente": {
+            "nombre": "Jose",
+            "apellidos": "",
+            "dni": "",
+            "fechaNac": "",
+            "email": "",
+            "contrasenya": "",
+            "id": 0
+        },
+        "productos": [{
+                "referencia": "01",
+                "descripcion": "",
+                "familia": "",
+                "precio": 0
+            },
+            {
+                "referencia": "02",
+                "descripcion": "",
+                "familia": "",
+                "precio": 0
+            }
+        ]
+    }
+]
