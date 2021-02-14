@@ -1,7 +1,11 @@
 class Venta {
     static deckVentasWrapper = document.querySelector(".ventasDisplay");
     static formVentaWrapper = document.querySelector(".ventasForm");
-
+    static inputProducto=document.getElementById('venta_producto');
+    static inputCliente = document.getElementById('venta_cliente');
+    static outputCliente = document.getElementById('output_cliente');
+    static btn_submit=document.getElementById('btn_submit');
+    
     productos = new Array();
     cliente = new Cliente({ nombre: "", apellidos: "", dni: "", fechaNac: "", email: "", contrasenya: "" })
 
@@ -74,39 +78,49 @@ class Venta {
 
     //Crear venta
     static configAddVenta() {
+        //config
         Venta.setClientes();
         Venta.setProductos();
-        Venta.configNumProductos();
-        var newVentaData = {
+        //bind producto
+        this.inputProducto.disabled=true;
+        this.btn_submit.disabled=true;
+
+        this.inputCliente.addEventListener('change',()=>{
+            const cliente=this.inputCliente.value;
+            if (cliente!='None') {
+                this.outputCliente.textContent=cliente;
+                this.inputCliente.disabled=true;
+                this.inputProducto.disabled=false;
+                this.btn_submit.disabled=false;
+            }
+        });
+        //form
+        let newVentaData = {
             cliente: {},
             productos: [{}]
         }
-        var newCliente;
+        let newVenta;
         const formElements = Venta.formVentaWrapper.elements;
         Venta.formVentaWrapper.addEventListener("submit", (event) => {
-            newClienteData = {
-                nombre: formElements[0].value,
-                apellidos: formElements[1].value,
-                dni: formElements[2].value,
-                fechaNac: formElements[3].value,
-                email: formElements[4].value,
-                contrasenya: formElements[5].value
-            }
-            newCliente = new Cliente(newClienteData);
-            Cliente.uploadCliente(newCliente);
+            const producto=document.getElementById('venta_producto').value;
+            let cantidad=0;
+            console.log(producto);
+            do {
+                cantidad = parseInt(window.prompt("Please enter a number from 1 to 100", 1), 10);
+            } while (isNaN(cantidad) || cantidad > 100 || cantidad < 1);
             event.preventDefault();
         })
     }
     static uploadCliente(cliente = new Cliente()) {
 
         console.log(cliente);
-        var ajax = new XMLHttpRequest();
+        let ajax = new XMLHttpRequest();
         //ajax.overrideMimeType("application/json");
         ajax.open('POST', `../json/clientes.json`, true);
 
         ajax.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         ajax.onreadystatechange = () => {
-            var clientes = ajax.responseText;
+            let clientes = ajax.responseText;
             if (ajax.readyState == 4 && ajax.status == "200") {
                 console.table(clientes);
             } else {
@@ -118,14 +132,13 @@ class Venta {
     }
 
     static setClientes() {
-        const inputCliente = document.getElementById("venta_cliente");
         const clientesData = loadJSON("clientes");
         const clientes = Cliente.loadClientes(clientesData);
         for (let i = 0; i < clientes.length; i++) {
             const cliente = clientes[i];
             const option = document.createElement('option');
             option.innerHTML = cliente.nombre;
-            inputCliente.appendChild(option);
+            this.inputCliente.appendChild(option);
         }
     }
     static setProductos() {
@@ -139,15 +152,6 @@ class Venta {
             inputProducto.appendChild(option);
         }
     }
-    static configNumProductos() {
-        const inputProducto = document.getElementById("venta_producto");
-        inputProducto.addEventListener("change", () => {
-            if (inputProducto.value != "None") {
-                do {
-                    var selection = parseInt(window.prompt("Please enter a number from 1 to 100", 1), 10);
-                } while (isNaN(selection) || selection > 100 || selection < 1);
-            }
-        })
 
-    }
+
 }
