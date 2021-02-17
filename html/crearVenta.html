@@ -77,18 +77,21 @@
                     <option>None</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary" id="btn_submit">Submit</button>
+            <button type="submit" class="btn btn-primary" id="btn_submit">Añadir a Carrito</button>
         </form>
-        <div class="card col ventaOutput" style="width: 18rem;">
+        <div class="card col ventaOutput" id="ventaOutput" style="width: 18rem;">
             <div class="card-header">
                 <h4 id="output_cliente">NONE</h4>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" id="output_producto">NONE
+                <li class="list-group-item" id="output_producto">
                 </li>
-                <a class="btn btn-danger btn-sm " href="#" role="button">delete</a>
 
             </ul>
+            <div class="card-footer btn-group">
+                <button type="button" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-warning">Vaciar</button>
+            </div>
         </div>
     </div>
 
