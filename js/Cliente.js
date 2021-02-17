@@ -30,25 +30,23 @@ class Cliente {
         return outputClientes;
     }
     static printClientes(clientes = [{ nombre: "", apellidos: "", dni: "", fechaNac: "", email: "", contrasenya: "" }]) {
-        console.log(clientes[0].nombre)
         for (let i = 0; i < clientes.length; i++) {
             const cliente = clientes[i];
             this.deckClientesWrapper.innerHTML += `
 			<div class="card" style="width: 18rem;">
-  				<div class="card-header">${cliente.nombre}</div>
+  				<div class="card-header">${cliente.nombre} - ${cliente.id}</div>
   					<ul class="list-group list-group-flush">
-    					<li class="list-group-item">An item</li>
-    					<li class="list-group-item">A second item</li>
-    					<li class="list-group-item">A third item</li>
+                        <li class="list-group-item">${cliente.fechaNac}</li>
+    					<li class="list-group-item">${cliente.dni}</li>
+    					<li class="list-group-item">${cliente.email}</li>
  					</ul>
 				</div>
 				<div class="card-footer btn-group">
-					<button type="button" class="btn btn-primary">Left</button>
-					<button type="button" class="btn btn-warning">Middle</button>
-					<button type="button" class="btn btn-danger">Right</button>
+					
+					<button type="button" class="btn btn-warning">Modificar</button>
+					<button type="button" class="btn btn-danger" onclick="Cliente.borrarCliente(${cliente.id})">Borrar</button>
 				</div>
 			</div>`;
-
         }
     }
 
@@ -96,5 +94,33 @@ class Cliente {
         }
         ajax.send(JSON.stringify(cliente));
 
+    }
+
+    //Borrar cliente
+    static borrarCliente(id = 0) {
+        //Cliente.borrarClienteUI(id);
+        Cliente.borrarClienteLogic(id);
+    }
+    static borrarClienteUI(id = 0) {
+        const cardHeaders = this.deckClientesWrapper.getElementsByClassName('card-header');
+        for (let i = 0; i < cardHeaders.length; i++) {
+            const cardHeader = cardHeaders[i];
+            if (cardHeader.innerHTML.endsWith(id)) {
+                cardHeader.parentElement.parentElement.remove();
+            }
+        }
+    }
+    static borrarClienteLogic(id = 0) {
+        var ajax = new XMLHttpRequest();
+        ajax.open("DELETE", "../json/clientes.json", false);
+        ajax.onload = function() {
+            var users = JSON.parse(ajax.responseText);
+            if (ajax.readyState == 4 && ajax.status == "200") {
+                console.table(users);
+            } else {
+                console.error(users);
+            }
+        }
+        ajax.send(null);
     }
 }
