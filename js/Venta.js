@@ -25,17 +25,26 @@ class Venta {
         const ventas = ventasData[0];
 
         for (let i = 0; i < ventas.length; i++) {
-            const venta = ventas[i];
+            const ventaBruta = ventas[i];
             const dataCliente = {
-                nombre: venta.cliente.nombre,
-                apellidos: venta.cliente.apellidos,
-                dni: venta.cliente.dni,
-                fechaNac: venta.cliente.fechaNac,
-                email: venta.cliente.email,
-                contrasenya: venta.cliente.contrasenya
+                nombre: ventaBruta.cliente.nombre,
+                apellidos: ventaBruta.cliente.apellidos,
+                dni: ventaBruta.cliente.dni,
+                fechaNac: ventaBruta.cliente.fechaNac,
+                email: ventaBruta.cliente.email,
+                contrasenya: ventaBruta.cliente.contrasenya
             }
+
             const cliente = new Cliente(dataCliente);
-            outputventas.push(new Venta(cliente));
+            const venta = new Venta(cliente);
+            const producto = new Producto({ referencia: "", descripcion: "", familia: "", precio: 0 });
+
+            for (let z = 0; z < ventaBruta.productos.length; z++) {
+                const producto = ventaBruta.productos[z];
+
+                venta.addProducto(new Producto(producto));
+            }
+            outputventas.push(venta);
         }
 
         return outputventas;
@@ -59,23 +68,29 @@ class Venta {
     }]) {
         for (let i = 0; i < ventas.length; i++) {
             const venta = ventas[i];
+
             this.deckVentasWrapper.innerHTML += `
 			<div class="card" style="width: 18rem;">
-  				<div class="card-header">${venta.cliente.nombre}</div>
+  				<div class="card-header">${venta.cliente.nombre} -- ${venta.cliente.email}</div>
   					<ul class="list-group list-group-flush">
-    					<li class="list-group-item">An item</li>
-    					<li class="list-group-item">A second item</li>
+    					<li class="list-group-item">${Math.E}</li>
+    					<li class="list-group-item">${venta.productos[1].descripcion}</li>
     					<li class="list-group-item">A third item</li>
  					</ul>
-				</div>
+				
 				<div class="card-footer btn-group">
 					<button type="button" class="btn btn-primary">Left</button>
 					<button type="button" class="btn btn-warning">Middle</button>
 					<button type="button" class="btn btn-danger">Right</button>
 				</div>
 			</div>`;
-
+            Venta.insertProductosUI(venta);
         }
+
+    }
+    static insertProductosUI(venta = new Venta()) {
+
+        console.log(venta);
     }
 
     //Crear venta

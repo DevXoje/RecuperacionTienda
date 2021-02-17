@@ -40,7 +40,7 @@ class Cliente {
     					<li class="list-group-item">${cliente.dni}</li>
     					<li class="list-group-item">${cliente.email}</li>
  					</ul>
-				</div>
+				
 				<div class="card-footer btn-group">
 					
 					<button type="button" class="btn btn-warning">Modificar</button>

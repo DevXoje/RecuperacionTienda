@@ -3,30 +3,30 @@
         "cliente": {
             "nombre": "Jose",
             "apellidos": "",
-            "dni": "",
-            "fechaNac": "",
-            "email": "",
+            "dni": "123456789P",
+            "fechaNac": "01-01-2020",
+            "email": "ejemplo@mail.com",
             "contrasenya": "",
             "id": 0
         },
         "productos": [{
                 "referencia": "01",
-                "descripcion": "",
-                "familia": "",
-                "precio": 0
+                "descripcion": "Samsung LC49G93TSSUXEN Odyssey G9 - Monitor curvo de 49'' DQHD",
+                "familia": "Monitor",
+                "precio": 150
             },
             {
                 "referencia": "02",
-                "descripcion": "",
-                "familia": "",
-                "precio": 0
+                "descripcion": "NGS Flame Black - Ratón Óptico 1000 dpi con Cable USB, Ratón para Ordenador o Portátil con 3 Botones, Ambidiestro, Negro ",
+                "familia": "Raton",
+                "precio": 10
             }
         ]
     },
     {
         "id": 2,
         "cliente": {
-            "nombre": "Jose",
+            "nombre": "Juan",
             "apellidos": "",
             "dni": "",
             "fechaNac": "",

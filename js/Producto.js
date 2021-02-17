@@ -34,18 +34,46 @@ class Producto {
 			<div class="card" style="width: 18rem;">
   				<div class="card-header">${producto.referencia}</div>
   					<ul class="list-group list-group-flush">
-    					<li class="list-group-item">An item</li>
-    					<li class="list-group-item">A second item</li>
-    					<li class="list-group-item">A third item</li>
+    					<li class="list-group-item">${producto.familia}</li>
+    					<li class="list-group-item">${producto.descripcion}</li>
+    					<li class="list-group-item">${producto.precio}</li>
  					</ul>
-				</div>
-				<div class="card-footer btn-group">
-					<button type="button" class="btn btn-primary">Left</button>
-					<button type="button" class="btn btn-warning">Middle</button>
-					<button type="button" class="btn btn-danger">Right</button>
-				</div>
-			</div>`;
+                    <div class="card-footer btn-group">
+					    <button type="button" class="btn btn-warning">Modificar</button>
+					    <button type="button" class="btn btn-danger" onclick="Producto.borrarProducto(${producto.referencia})">Borrar</button>
+				    </div>
+				</div>`;
 
         }
+    }
+
+
+    //Borrar cliente
+    static borrarProducto(referencia = "") {
+        //Producto.borrarProductoUI(referencia);
+        Producto.borrarProductoLogic(referencia);
+    }
+    static borrarProductoUI(referencia = "") {
+        const cardHeaders = this.deckProductosWrapper.getElementsByClassName('card-header');
+        for (let i = 0; i < cardHeaders.length; i++) {
+            const cardHeader = cardHeaders[i];
+            console.log(referencia)
+            if (cardHeader.innerHTML == referencia) {
+                cardHeader.parentElement.remove();
+            }
+        }
+    }
+    static borrarProductoLogic(referencia = "") {
+        var ajax = new XMLHttpRequest();
+        ajax.open("DELETE", "../json/clientes.json", false);
+        ajax.onload = function() {
+            var users = JSON.parse(ajax.responseText);
+            if (ajax.readyState == 4 && ajax.status == "200") {
+                console.table(users);
+            } else {
+                console.error(users);
+            }
+        }
+        ajax.send(null);
     }
 }
