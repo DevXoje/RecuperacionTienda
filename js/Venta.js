@@ -7,12 +7,13 @@ class Venta {
     static outputCliente = document.getElementById('output_cliente');
     static btn_submit = document.getElementById('btn_submit');
     static ventaOutput = document.getElementById('ventaOutput');
-
+    static numVentas = 0;
     productos = new Array();
     cliente = new Cliente({ nombre: "", apellidos: "", dni: "", fechaNac: "", email: "", contrasenya: "" })
 
     constructor(cliente = new Cliente()) {
         this.cliente = cliente;
+        this.id = ++Venta.numVentas;
     }
 
     addProducto(producto = new Producto()) {
