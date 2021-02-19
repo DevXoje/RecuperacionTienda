@@ -3,7 +3,7 @@ function loadJSON(nameDoc = new String()) {
     var ajax = new XMLHttpRequest();
     ajax.overrideMimeType("application/json");
     ajax.open('GET', `../json/${nameDoc}.json`, false);
-    ajax.onreadystatechange = function() {
+    ajax.onreadystatechange = () => {
         if (ajax.readyState == 4 && ajax.status == "200") {
             output.push(JSON.parse(ajax.responseText));
         }

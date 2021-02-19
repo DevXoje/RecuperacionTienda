@@ -20,6 +20,19 @@ class Venta {
         this.productos.push(producto);
     }
 
+    static writeCookie() {
+        console.log("writing cookie");
+        const now = new Date();
+        const minutes = 1;
+        now.setTime(now.getTime() + (minutes * 60 * 1000));
+        //cookievalue = escape(document.myform.customer.value) + ";"
+        const cookievalue = Venta.outputCliente.textContent + ";"
+
+        document.cookie = `name = ${cookievalue} expires=${now.toUTCString()};`;
+        setTimeout(() => {}, 1000);
+        console.log("Setting Cookies : " + "name=" + cookievalue);
+    }
+
     //Ver venta
     static loadVentas(ventasData = [{ cliente: new Cliente(), productos: new Array() }]) {
         const outputventas = new Array();
@@ -110,7 +123,7 @@ class Venta {
                 this.inputCliente.disabled = true;
                 this.inputProducto.disabled = false;
                 this.ventaOutput.style.display = 'flex';
-
+                Venta.writeCookie();
             }
         });
         this.inputProducto.addEventListener('change', () => {
@@ -185,6 +198,15 @@ class Venta {
                     <a class="btn btn-danger btn-sm " href="#" role="button">delete</a>
         
         `;
+    }
+
+    static cancelCarrito() {
+        //Venta.ventaOutput
+        console.log("cancelando");
+    }
+    static guardarCarrito() {
+        //Venta.ventaOutput
+        console.log("guardando");
     }
 
 

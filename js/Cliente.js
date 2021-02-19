@@ -87,7 +87,7 @@ class Cliente {
                 console.log(data);
             }
         }
-        ajax.open("POST", "../php/post.php?param=" + data, true);
+        ajax.open("POST", "../php/post-cliente.php?param=" + data, true);
         ajax.send();
 
     }
