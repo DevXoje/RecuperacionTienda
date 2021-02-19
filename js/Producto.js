@@ -1,6 +1,6 @@
 class Producto {
     static deckProductosWrapper = document.querySelector(".productosDisplay");
-
+    static formProductosWrapper = document.querySelector(".productosForm");
     referencia = "";
     descripcion = "";
     familia = "";
@@ -23,14 +23,14 @@ class Producto {
         return outputProductos;
     }
     static printProductos(productos = [{
-        referencia: "",
-        descripcion: "",
-        familia: "",
-        precio: 0
-    }]) {
-        for (let i = 0; i < productos.length; i++) {
-            const producto = productos[i];
-            this.deckProductosWrapper.innerHTML += `
+            referencia: "",
+            descripcion: "",
+            familia: "",
+            precio: 0
+        }]) {
+            for (let i = 0; i < productos.length; i++) {
+                const producto = productos[i];
+                this.deckProductosWrapper.innerHTML += `
 			<div class="card" style="width: 18rem;">
   				<div class="card-header">${producto.referencia}</div>
   					<ul class="list-group list-group-flush">
@@ -44,9 +44,41 @@ class Producto {
 				    </div>
 				</div>`;
 
+            }
         }
-    }
+        //Crear Producto
+    static configAddProducto() {
+        let newProductoData = { referencia: "", descripcion: "", familia: "", precio: 0 };
+        let newProducto;
+        const formElements = Producto.formProductosWrapper.elements;
+        Producto.formProductosWrapper.addEventListener("submit", (event) => {
+            newProductoData = {
+                referencia: formElements[0].value,
+                descripcion: formElements[1].value,
+                familia: formElements[2].value,
+                precio: parseInt(formElements[3].value)
+            };
 
+            newProducto = new Producto(newProductoData);
+            Producto.uploadProducto(newProducto);
+            event.preventDefault();
+        })
+    }
+    static uploadProducto(Producto = new Producto()) {
+
+        const data = JSON.stringify(Producto);
+        let ajax = new XMLHttpRequest();
+
+        ajax.onreadystatechange = () => {
+            let Productos = ajax.responseText;
+            if (ajax.readyState == 4 && ajax.status == "200") {
+                console.log(data);
+            }
+        }
+        ajax.open("POST", "../php/post-producto.php?param=" + data, true);
+        ajax.send();
+
+    }
 
     //Borrar cliente
     static borrarProducto(referencia = "") {
@@ -64,10 +96,10 @@ class Producto {
         }
     }
     static borrarProductoLogic(referencia = "") {
-        var ajax = new XMLHttpRequest();
+        let ajax = new XMLHttpRequest();
         ajax.open("DELETE", "../json/clientes.json", false);
         ajax.onload = function() {
-            var users = JSON.parse(ajax.responseText);
+            let users = JSON.parse(ajax.responseText);
             if (ajax.readyState == 4 && ajax.status == "200") {
                 console.table(users);
             } else {
