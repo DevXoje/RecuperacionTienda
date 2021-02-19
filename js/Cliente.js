@@ -78,21 +78,17 @@ class Cliente {
     }
     static uploadCliente(cliente = new Cliente()) {
 
-        console.log(cliente);
+        const data = JSON.stringify(cliente);
         var ajax = new XMLHttpRequest();
-        //ajax.overrideMimeType("application/json");
-        ajax.open('POST', `../json/clientes.json`, true);
 
-        ajax.setRequestHeader('Content-type', 'application/json; charset=utf-8');
         ajax.onreadystatechange = () => {
             var clientes = ajax.responseText;
             if (ajax.readyState == 4 && ajax.status == "200") {
-                console.table(clientes);
-            } else {
-                console.error(ajax);
+                console.log(data);
             }
         }
-        ajax.send(JSON.stringify(cliente));
+        ajax.open("POST", "../php/post.php?param=" + data, true);
+        ajax.send();
 
     }
 
