@@ -37,7 +37,6 @@ class Venta {
     static loadVentas(ventasData = [{ cliente: new Cliente(), productos: new Array() }]) {
         const outputventas = new Array();
         const ventas = ventasData[0];
-
         for (let i = 0; i < ventas.length; i++) {
             const ventaBruta = ventas[i];
             const dataCliente = {
@@ -51,7 +50,7 @@ class Venta {
 
             const cliente = new Cliente(dataCliente);
             const venta = new Venta(cliente);
-            const producto = new Producto({ referencia: "", descripcion: "", familia: "", precio: 0 });
+            //const producto = new Producto({ referencia: "", descripcion: "", familia: "", precio: 0 });
 
             for (let z = 0; z < ventaBruta.productos.length; z++) {
                 const producto = ventaBruta.productos[z];
@@ -64,6 +63,7 @@ class Venta {
         return outputventas;
     }
     static printVentas(ventas = [{
+        id: 0,
         cliente: {
             nombre: "",
             apellidos: "",
@@ -84,27 +84,45 @@ class Venta {
             const venta = ventas[i];
 
             this.deckVentasWrapper.innerHTML += `
-			<div class="card" style="width: 18rem;">
-  				<div class="card-header">${venta.cliente.nombre} -- ${venta.cliente.email}</div>
+			<div class="card mb-5" style="width: 18rem;">
+  				<div class="card-header">${venta.cliente.nombre} -- ${venta.cliente.email} -- ${venta.id}</div>
   					<ul class="list-group list-group-flush">
-    					<li class="list-group-item">${Math.E}</li>
-    					<li class="list-group-item">${venta.productos[1].descripcion}</li>
-    					<li class="list-group-item">A third item</li>
  					</ul>
 				
-				<div class="card-footer btn-group">
-					<button type="button" class="btn btn-primary">Left</button>
-					<button type="button" class="btn btn-warning">Middle</button>
-					<button type="button" class="btn btn-danger">Right</button>
+				<div class="card-footer btn-group">					
+					<button type="button" class="btn btn-warning">Modificar</button>
+					<button type="button" class="btn btn-danger" onclick="Venta.borrarVenta(${venta.id})">Borrar</button>
 				</div>
 			</div>`;
-            Venta.insertProductosUI(venta);
+            console.log("i=" + i);
+            //Venta.insertPrecio();
         }
+        Venta.insertProductosUI(ventas);
+
+
 
     }
-    static insertProductosUI(venta = new Venta()) {
+    static insertProductosUI(ventas = [new Venta()]) {
+        let carrito;
+        let listOuput = document.querySelectorAll(".list-group");
+        for (let i = 0; i < listOuput.length; i++) {
+            const output = listOuput[i];
+            for (let j = 0; j < ventas[i].productos.length; j++) {
+                const producto = ventas[i].productos[j];
+                output.innerHTML += `
+                <div class="list-group-item">
+                    ${producto.descripcion}
+                </div>
+                `;
+            }
 
-        console.log(venta);
+
+        }
+
+
+    }
+    static insertPrecio() {
+        console.log("insernado precio");
     }
 
     //Crear venta
@@ -123,7 +141,7 @@ class Venta {
                 this.inputCliente.disabled = true;
                 this.inputProducto.disabled = false;
                 this.ventaOutput.style.display = 'flex';
-                Venta.writeCookie();
+                //Venta.writeCookie();
             }
         });
         this.inputProducto.addEventListener('change', () => {
@@ -194,20 +212,76 @@ class Venta {
         if (this.outputProducto.innerText == 'NONE') {
             this.outputProducto.innerText = '';
         }
-        this.outputProducto.innerHTML += `${this.inputProducto.value} x ${cantidad}
-                    <a class="btn btn-danger btn-sm " href="#" role="button">delete</a>
-        
-        `;
+        this.outputProducto.innerHTML += `
+            <div class="item">
+                <div class="item_carrito d-inline">${this.inputProducto.value}</div> x 
+                <div class="cantidad_item_carrito d-inline">${cantidad}</div>
+                <a class="btn btn-danger btn-sm " href="#" role="button" onclick="event.target.parentElement.remove();">delete</a>
+            </div>`;
     }
 
     static cancelCarrito() {
-        //Venta.ventaOutput
-        console.log("cancelando");
+        if (confirm("¿Seguro que desea borrar el carrito?")) {
+            location.reload();
+        }
     }
-    static guardarCarrito() {
-        //Venta.ventaOutput
-        console.log("guardando");
+    static uploadVenta() {
+        const listaProducto = new Array();
+        let productosBruto = Venta.ventaOutput.getElementsByClassName('item');
+        for (let i = 0; i < productosBruto.length; i++) {
+            const productoBruto = productosBruto[i];
+            listaProducto.push({
+                producto: productoBruto.querySelector('.item_carrito').textContent,
+                cantidad: parseInt(productoBruto.querySelector('.cantidad_item_carrito').textContent)
+            });
+        }
+        console.log(listaProducto);
+
+        /*var newCliente;
+        const formElements = Cliente.formClientesWrapper.elements;
+        Cliente.formClientesWrapper.addEventListener("submit", (event) => {
+            newClienteData = {
+                nombre: formElements[0].value,
+                apellidos: formElements[1].value,
+                dni: formElements[2].value,
+                fechaNac: formElements[3].value,
+                email: formElements[4].value,
+                contrasenya: formElements[5].value
+            }
+            newCliente = new Cliente(newClienteData);
+            Cliente.uploadCliente(newCliente);
+            event.preventDefault();
+        }); */
     }
 
+    // Borrar Venta
+    static borrarVenta(id = 0) {
+        //Venta.borrarVentaUI(id);
+        Venta.borrarVentaLogic(id);
+    }
+    static borrarVentaUI(id = 0) {
+        const cardHeaders = this.deckVentasWrapper.getElementsByClassName('card-header');
+        for (let i = 0; i < cardHeaders.length; i++) {
+            const cardHeader = cardHeaders[i];
+            console.log(cardHeader.innerHTML.endsWith(id));
+            if (cardHeader.innerHTML.endsWith(id)) {
+                cardHeader.parentElement.remove();
+            }
+        }
+    }
+    static borrarVentaLogic(id = 0) {
+            let ajax = new XMLHttpRequest();
+            ajax.open("DELETE", "../json/clientes.json", false);
+            ajax.onload = function() {
+                let ventas = JSON.parse(ajax.responseText);
+                if (ajax.readyState == 4 && ajax.status == "200") {
+                    console.table(ventas);
+                } else {
+                    console.error(ventas);
+                }
+            }
+            ajax.send(null);
+        }
+        // Modificar Venta
 
 }

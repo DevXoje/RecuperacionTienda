@@ -28,23 +28,23 @@
         "cliente": {
             "nombre": "Juan",
             "apellidos": "",
-            "dni": "",
-            "fechaNac": "",
-            "email": "",
+            "dni": "987654321P",
+            "fechaNac": "01-01-2020",
+            "email": "otro@mail.com",
             "contrasenya": "",
-            "id": 0
+            "id": 2
         },
         "productos": [{
-                "referencia": "01",
-                "descripcion": "",
-                "familia": "",
-                "precio": 0
+                "referencia": "03",
+                "descripcion": "SAMSUNG Galaxy M11 | Smartphone Dual SIM, Pantalla de 6,4'', Cámara 13 MP, 3 GB RAM, 32 GB ROM Ampliables, Batería 5.000 mAh, Android, Color Negro [Versión española] ",
+                "familia": "Smartphones",
+                "precio": 150
             },
             {
-                "referencia": "02",
-                "descripcion": "",
-                "familia": "",
-                "precio": 0
+                "referencia": "04",
+                "descripcion": "XFX AMD Radeon RX RX-580P8DFD6 8GB Triple X Edition - Tarjeta gráfica Radeon Express, GDDR5,256BIT,DVI+HDMI+3DP,GTS",
+                "familia": "Componentes",
+                "precio": 10
             }
         ]
     }

@@ -74,7 +74,7 @@ class Cliente {
             newCliente = new Cliente(newClienteData);
             Cliente.uploadCliente(newCliente);
             event.preventDefault();
-        })
+        });
     }
     static uploadCliente(cliente = new Cliente()) {
 

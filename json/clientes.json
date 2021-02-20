@@ -1,3 +1,9 @@
-[
-    "{\"nombre\":\"Jose\",\"apellidos\":\"Vilches\",\"dni\":\"123456789P\",\"fechaNac\":\"1994-12-12\",\"email\":\"dawxoje@gmail.com\",\"contrasenya\":\"1\",\"id\":1}"
-]
+[{
+    "nombre": "Jose",
+    "apellidos": "",
+    "dni": "123456789P",
+    "fechaNac": "01-01-2020",
+    "email": "ejemplo@mail.com",
+    "contrasenya": "",
+    "id": 0
+}]

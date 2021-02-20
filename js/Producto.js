@@ -32,11 +32,10 @@ class Producto {
                 const producto = productos[i];
                 this.deckProductosWrapper.innerHTML += `
 			<div class="card" style="width: 18rem;">
-  				<div class="card-header">${producto.referencia}</div>
-  					<ul class="list-group list-group-flush">
-    					<li class="list-group-item">${producto.familia}</li>
+  				<div class="card-header">${producto.referencia} -- ${producto.familia}</div>
+  					<ul class="list-group list-group-flush">			
     					<li class="list-group-item">${producto.descripcion}</li>
-    					<li class="list-group-item">${producto.precio}</li>
+    					<li class="list-group-item">${producto.precio} €</li>
  					</ul>
                     <div class="card-footer btn-group">
 					    <button type="button" class="btn btn-warning">Modificar</button>
