@@ -1,6 +1,7 @@
 class Producto {
     static deckProductosWrapper = document.querySelector(".productosDisplay");
     static formProductosWrapper = document.querySelector(".productosForm");
+    static cacheProductos;
     referencia = "";
     descripcion = "";
     familia = "";
@@ -23,29 +24,30 @@ class Producto {
         return outputProductos;
     }
     static printProductos(productos = [{
-            referencia: "",
-            descripcion: "",
-            familia: "",
-            precio: 0
-        }]) {
-            for (let i = 0; i < productos.length; i++) {
-                const producto = productos[i];
-                this.deckProductosWrapper.innerHTML += `
-			<div class="card" style="width: 18rem;">
+        referencia: "",
+        descripcion: "",
+        familia: "",
+        precio: 0
+    }]) {
+        for (let i = 0; i < productos.length; i++) {
+            const producto = productos[i];
+            this.deckProductosWrapper.innerHTML += `
+			<div class="card mb-5" style="width: 18rem;">
   				<div class="card-header">${producto.referencia} -- ${producto.familia}</div>
   					<ul class="list-group list-group-flush">			
     					<li class="list-group-item">${producto.descripcion}</li>
     					<li class="list-group-item">${producto.precio} €</li>
  					</ul>
                     <div class="card-footer btn-group">
-					    <button type="button" class="btn btn-warning">Modificar</button>
+					    <button type="button" class="btn btn-warning" onclick="Producto.editarProducto(${producto.referencia})">Modificar</button>
 					    <button type="button" class="btn btn-danger" onclick="Producto.borrarProducto(${producto.referencia})">Borrar</button>
 				    </div>
 				</div>`;
 
-            }
         }
-        //Crear Producto
+    }
+
+    //Crear Producto
     static configAddProducto() {
         let newProductoData = { referencia: "", descripcion: "", familia: "", precio: 0 };
         let newProducto;
@@ -79,7 +81,48 @@ class Producto {
 
     }
 
-    //Borrar cliente
+    //Editar producto
+    static configEditProducto() {
+        const productoToEdit = JSON.parse(localStorage.getItem('productEdit'));
+        console.log(productoToEdit);
+        if (productoToEdit) {
+            const formElements = this.formProductosWrapper.elements;
+            formElements[0].value = productoToEdit.referencia;
+            formElements[1].value = productoToEdit.descripcion;
+            formElements[2].value = productoToEdit.familia.toLowerCase();
+            formElements[3].value = productoToEdit.precio;
+            localStorage.clear();
+        }
+        /*const clienteToEdit = JSON.parse(localStorage.getItem('clientEdit'));
+
+        if (clienteToEdit) {
+            console.log(clienteToEdit);
+            const formElements = Cliente.formClientesWrapper.elements;
+            formElements[0].value = clienteToEdit.nombre;
+            formElements[1].value = clienteToEdit.apellidos;
+            formElements[2].value = clienteToEdit.dni;
+            formElements[3].value = clienteToEdit.fechaNac;
+            formElements[4].value = clienteToEdit.email;
+            localStorage.clear();
+        } */
+    }
+    static editarProducto(referencia = "") {
+        let productoSelect;
+
+        for (let i = 0; i < this.cacheProductos.length; i++) {
+            const producto = this.cacheProductos[i];
+            if (producto.referencia = referencia) {
+                productoSelect = producto;
+            }
+        }
+        localStorage.setItem('productEdit', JSON.stringify(productoSelect));
+        location.href = "./crearProducto.html";
+
+    }
+
+
+
+    //Borrar producto
     static borrarProducto(referencia = "") {
         //Producto.borrarProductoUI(referencia);
         Producto.borrarProductoLogic(referencia);

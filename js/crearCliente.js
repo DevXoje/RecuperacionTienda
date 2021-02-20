@@ -1,1 +1,2 @@
 Cliente.configAddCliente();
+Cliente.configEditCliente();

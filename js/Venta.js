@@ -9,7 +9,7 @@ class Venta {
     static ventaOutput = document.getElementById('ventaOutput');
     static numVentas = 0;
     productos = new Array();
-    cliente = new Cliente({ nombre: "", apellidos: "", dni: "", fechaNac: "", email: "", contrasenya: "" })
+    cliente;
 
     constructor(cliente = new Cliente()) {
         this.cliente = cliente;
@@ -203,7 +203,7 @@ class Venta {
         for (let i = 0; i < productos.length; i++) {
             const producto = productos[i];
             const option = document.createElement('option');
-            option.innerHTML = producto.referencia;
+            option.innerHTML = `${producto.familia} -- ${producto.referencia}`;
             inputProducto.appendChild(option);
         }
     }

@@ -2,6 +2,7 @@ class Cliente {
     static numClientes = 0;
     static deckClientesWrapper = document.querySelector(".clientesDisplay");
     static formClientesWrapper = document.querySelector(".clientesForm");
+    static cacheClientes;
     nombre = "";
     apellidos = "";
     dni = "";
@@ -43,7 +44,7 @@ class Cliente {
 				
 				<div class="card-footer btn-group">
 					
-					<button type="button" class="btn btn-warning">Modificar</button>
+					<button type="button" class="btn btn-warning" onclick="Cliente.editarCliente(${cliente.id})">Modificar</button>
 					<button type="button" class="btn btn-danger" onclick="Cliente.borrarCliente(${cliente.id})">Borrar</button>
 				</div>
 			</div>`;
@@ -89,6 +90,38 @@ class Cliente {
         }
         ajax.open("POST", "../php/post-cliente.php?param=" + data, true);
         ajax.send();
+
+    }
+
+    //Editar cliente
+
+    static configEditCliente() {
+        const clienteToEdit = JSON.parse(localStorage.getItem('clientEdit'));
+
+        if (clienteToEdit) {
+            console.log(clienteToEdit);
+            const formElements = Cliente.formClientesWrapper.elements;
+            formElements[0].value = clienteToEdit.nombre;
+            formElements[1].value = clienteToEdit.apellidos;
+            formElements[2].value = clienteToEdit.dni;
+            formElements[3].value = clienteToEdit.fechaNac;
+            formElements[4].value = clienteToEdit.email;
+            localStorage.clear();
+        }
+
+    }
+    static editarCliente(id = 0) {
+        let clienteSelect;
+
+        for (let i = 0; i < this.cacheClientes.length; i++) {
+            const cliente = this.cacheClientes[i];
+            if (cliente.id = id) {
+                clienteSelect = cliente;
+            }
+        }
+
+        localStorage.setItem('clientEdit', JSON.stringify(clienteSelect));
+        location.href = "./crearClientes.html";
 
     }
 

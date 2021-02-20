@@ -1,8 +1,8 @@
 [{
     "nombre": "Jose",
-    "apellidos": "",
+    "apellidos": "Serrano Vasquez",
     "dni": "123456789P",
-    "fechaNac": "01-01-2020",
+    "fechaNac": "2020-02-09",
     "email": "ejemplo@mail.com",
     "contrasenya": "",
     "id": 0

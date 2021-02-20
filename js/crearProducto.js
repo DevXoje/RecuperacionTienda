@@ -1,1 +1,2 @@
 Producto.configAddProducto();
+Producto.configEditProducto();

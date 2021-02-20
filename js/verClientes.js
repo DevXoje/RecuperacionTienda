@@ -1,6 +1,6 @@
 const clientesData = loadJSON("clientes");
-const clientes = Cliente.loadClientes(clientesData);
-Cliente.printClientes(clientes);
+Cliente.cacheClientes = Cliente.loadClientes(clientesData);
+Cliente.printClientes(Cliente.cacheClientes);
 
 /*
 const btn_addCliente = document.getElementById('btn_addClient');
