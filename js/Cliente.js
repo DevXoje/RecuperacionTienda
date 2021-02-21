@@ -21,6 +21,11 @@ class Cliente {
     }
 
     //Ver cliente
+    static configShowClientes() {
+        const clientesData = loadJSON("clientes");
+        Cliente.cacheClientes = Cliente.loadClientes(clientesData);
+        Cliente.printClientes(Cliente.cacheClientes);
+    }
     static loadClientes(clientesData = [{ nombre: "", apellidos: "", dni: "", fechaNac: "", email: "", contrasenya: "" }]) {
         const outputClientes = new Array();
         const clientes = clientesData[0];
@@ -78,17 +83,22 @@ class Cliente {
         });
     }
     static uploadCliente(cliente = new Cliente()) {
-
-        const data = JSON.stringify(cliente);
+        const clientesData = loadJSON("clientes");
+        Cliente.cacheClientes = Cliente.loadClientes(clientesData);
         var ajax = new XMLHttpRequest();
+        const outputData = new Array();
+        for (let i = 0; i < this.cacheClientes.length; i++) {
+            const clienteAntiguo = this.cacheClientes[i];
+            outputData.push(clienteAntiguo);
+        }
+        outputData.push(cliente);
 
         ajax.onreadystatechange = () => {
-            var clientes = ajax.responseText;
             if (ajax.readyState == 4 && ajax.status == "200") {
-                console.log(data);
+                console.log(outputData);
             }
         }
-        ajax.open("POST", "../php/post-cliente.php?param=" + data, true);
+        ajax.open("POST", "../php/post-cliente.php?param=" + JSON.stringify(outputData), true);
         ajax.send();
 
     }
