@@ -1,19 +1,28 @@
 [{
-        "nombre": "Jose",
-        "apellidos": "",
+        "nombre": "Pepe",
+        "apellidos": "123",
         "dni": "123456789P",
-        "fechaNac": "01-01-2020",
+        "fechaNac": "1000-01-12",
         "email": "ejemplo@mail.com",
-        "contrasenya": "",
-        "id": 0
+        "contrasenya": "123",
+        "id": 2
     },
     {
-        "nombre": "Juan",
-        "apellidos": "Perez",
-        "dni": "987654321P",
-        "fechaNac": "01-01-2020",
-        "email": "otro@mail.com",
-        "contrasenya": "321",
-        "id": 2
+        "nombre": "Jose",
+        "apellidos": "Vilches",
+        "dni": "123456789P",
+        "fechaNac": "1994-12-12",
+        "email": "dawxoje@gmail.com",
+        "contrasenya": "21",
+        "id": 3
+    },
+    {
+        "nombre": "Juana",
+        "apellidos": "Velardo",
+        "dni": "1234111111",
+        "fechaNac": "1880-12-12",
+        "email": "xoje@ejemplo.com",
+        "contrasenya": "123",
+        "id": 1
     }
 ]

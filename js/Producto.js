@@ -1,7 +1,7 @@
 class Producto {
     static deckProductosWrapper = document.querySelector(".productosDisplay");
     static formProductosWrapper = document.querySelector(".productosForm");
-    static cacheProductos;
+    static cacheProductos = new Array();
     referencia = "";
     descripcion = "";
     familia = "";
@@ -14,9 +14,15 @@ class Producto {
     }
 
     //Ver producto
+    static configShowProductos() {
+        const productosData = loadJSON("productos");
+        Producto.cacheProductos = Producto.loadProductos(productosData);
+        Producto.printProductos(Producto.cacheProductos);
+    }
     static loadProductos(productosData = [{ referencia: "", descripcion: "", familia: "", precio: 0 }]) {
         const outputProductos = new Array();
         const productos = productosData[0];
+        //productos = productosData[0];
         for (let i = 0; i < productos.length; i++) {
             const producto = productos[i];
             outputProductos.push(new Producto(producto));
@@ -65,18 +71,25 @@ class Producto {
             event.preventDefault();
         })
     }
-    static uploadProducto(Producto = new Producto()) {
+    static uploadProducto(producto = new Producto()) {
 
-        const data = JSON.stringify(Producto);
-        let ajax = new XMLHttpRequest();
+        const productosData = loadJSON("productos");
+        this.cacheProductos = this.loadProductos(productosData);
+        var ajax = new XMLHttpRequest();
+        const outputData = new Array();
+        for (let i = 0; i < this.cacheProductos.length; i++) {
+            const productoAntiguo = this.cacheProductos[i];
+            outputData.push(productoAntiguo);
+        }
+        outputData.push(producto);
 
         ajax.onreadystatechange = () => {
-            let Productos = ajax.responseText;
             if (ajax.readyState == 4 && ajax.status == "200") {
-                console.log(data);
+                console.log(outputData);
             }
         }
-        ajax.open("POST", "../php/post-producto.php?param=" + data, true);
+
+        ajax.open("POST", "../php/post-producto.php?param=" + JSON.stringify(outputData), true);
         ajax.send();
 
     }
@@ -84,7 +97,6 @@ class Producto {
     //Editar producto
     static configEditProducto() {
         const productoToEdit = JSON.parse(localStorage.getItem('productEdit'));
-        console.log(productoToEdit);
         if (productoToEdit) {
             const formElements = this.formProductosWrapper.elements;
             formElements[0].value = productoToEdit.referencia;
@@ -93,28 +105,18 @@ class Producto {
             formElements[3].value = productoToEdit.precio;
             localStorage.clear();
         }
-        /*const clienteToEdit = JSON.parse(localStorage.getItem('clientEdit'));
 
-        if (clienteToEdit) {
-            console.log(clienteToEdit);
-            const formElements = Cliente.formClientesWrapper.elements;
-            formElements[0].value = clienteToEdit.nombre;
-            formElements[1].value = clienteToEdit.apellidos;
-            formElements[2].value = clienteToEdit.dni;
-            formElements[3].value = clienteToEdit.fechaNac;
-            formElements[4].value = clienteToEdit.email;
-            localStorage.clear();
-        } */
     }
     static editarProducto(referencia = "") {
         let productoSelect;
 
         for (let i = 0; i < this.cacheProductos.length; i++) {
             const producto = this.cacheProductos[i];
-            if (producto.referencia = referencia) {
+            if (producto.referencia == referencia) {
                 productoSelect = producto;
             }
         }
+        this.borrarProducto(productoSelect.referencia);
         localStorage.setItem('productEdit', JSON.stringify(productoSelect));
         location.href = "./crearProducto.html";
 
@@ -124,30 +126,39 @@ class Producto {
 
     //Borrar producto
     static borrarProducto(referencia = "") {
-        //Producto.borrarProductoUI(referencia);
         Producto.borrarProductoLogic(referencia);
+        Producto.borrarProductoUI(referencia);
     }
     static borrarProductoUI(referencia = "") {
+        alert("Stop");
         const cardHeaders = this.deckProductosWrapper.getElementsByClassName('card-header');
         for (let i = 0; i < cardHeaders.length; i++) {
             const cardHeader = cardHeaders[i];
-            console.log(referencia)
-            if (cardHeader.innerHTML == referencia) {
+
+            if (cardHeader.innerHTML.startsWith(referencia)) {
                 cardHeader.parentElement.remove();
             }
         }
     }
     static borrarProductoLogic(referencia = "") {
-        let ajax = new XMLHttpRequest();
-        ajax.open("DELETE", "../json/clientes.json", false);
-        ajax.onload = function() {
-            let users = JSON.parse(ajax.responseText);
-            if (ajax.readyState == 4 && ajax.status == "200") {
-                console.table(users);
-            } else {
-                console.error(users);
+        const productosData = loadJSON("productos");
+        this.cacheProductos = this.loadProductos(productosData);
+        var ajax = new XMLHttpRequest();
+        const outputData = new Array();
+        for (let i = 0; i < this.cacheProductos.length; i++) {
+            const productoAntiguo = this.cacheProductos[i];
+            if (productoAntiguo.referencia != referencia) {
+                outputData.push(productoAntiguo);
             }
         }
-        ajax.send(null);
+
+        ajax.onreadystatechange = () => {
+            if (ajax.readyState == 4 && ajax.status == "200") {
+                console.log(outputData);
+            }
+        }
+        ajax.open("POST", "../php/post-producto.php?param=" + JSON.stringify(outputData), true);
+        ajax.send();
+
     }
 }
