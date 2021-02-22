@@ -1,4 +1,5 @@
 class Producto {
+    static numProductos = 0;
     static deckProductosWrapper = document.querySelector(".productosDisplay");
     static formProductosWrapper = document.querySelector(".productosForm");
     static cacheProductos = new Array();
@@ -6,8 +7,8 @@ class Producto {
     descripcion = "";
     familia = "";
     precio = 0;
-    constructor({ referencia = "", descripcion = "", familia = "", precio = 0 }) {
-        this.referencia = referencia;
+    constructor({ descripcion = "", familia = "", precio = 0 }) {
+        this.referencia = ++Producto.numProductos;
         this.descripcion = descripcion;
         this.familia = familia;
         this.precio = precio;
@@ -19,7 +20,7 @@ class Producto {
         Producto.cacheProductos = Producto.loadProductos(productosData);
         Producto.printProductos(Producto.cacheProductos);
     }
-    static loadProductos(productosData = [{ referencia: "", descripcion: "", familia: "", precio: 0 }]) {
+    static loadProductos(productosData = [{ referencia: 0, descripcion: "", familia: "", precio: 0 }]) {
         const outputProductos = new Array();
         const productos = productosData[0];
         //productos = productosData[0];
@@ -30,7 +31,7 @@ class Producto {
         return outputProductos;
     }
     static printProductos(productos = [{
-        referencia: "",
+        referencia: 0,
         descripcion: "",
         familia: "",
         precio: 0
@@ -55,17 +56,15 @@ class Producto {
 
     //Crear Producto
     static configAddProducto() {
-        let newProductoData = { referencia: "", descripcion: "", familia: "", precio: 0 };
+        let newProductoData = { descripcion: "", familia: "", precio: 0 };
         let newProducto;
         const formElements = Producto.formProductosWrapper.elements;
         Producto.formProductosWrapper.addEventListener("submit", (event) => {
             newProductoData = {
-                referencia: formElements[0].value,
-                descripcion: formElements[1].value,
-                familia: formElements[2].value,
-                precio: parseInt(formElements[3].value)
+                descripcion: formElements[0].value,
+                familia: formElements[1].value,
+                precio: parseInt(formElements[2].value)
             };
-
             newProducto = new Producto(newProductoData);
             Producto.uploadProducto(newProducto);
             event.preventDefault();
@@ -99,10 +98,9 @@ class Producto {
         const productoToEdit = JSON.parse(localStorage.getItem('productEdit'));
         if (productoToEdit) {
             const formElements = this.formProductosWrapper.elements;
-            formElements[0].value = productoToEdit.referencia;
-            formElements[1].value = productoToEdit.descripcion;
-            formElements[2].value = productoToEdit.familia.toLowerCase();
-            formElements[3].value = productoToEdit.precio;
+            formElements[0].value = productoToEdit.descripcion;
+            formElements[1].value = productoToEdit.familia.toLowerCase();
+            formElements[2].value = productoToEdit.precio;
             localStorage.clear();
         }
 
@@ -130,7 +128,6 @@ class Producto {
         Producto.borrarProductoUI(referencia);
     }
     static borrarProductoUI(referencia = "") {
-        alert("Stop");
         const cardHeaders = this.deckProductosWrapper.getElementsByClassName('card-header');
         for (let i = 0; i < cardHeaders.length; i++) {
             const cardHeader = cardHeaders[i];
@@ -142,6 +139,7 @@ class Producto {
     }
     static borrarProductoLogic(referencia = "") {
         const productosData = loadJSON("productos");
+        this.numProductos = 0;
         this.cacheProductos = this.loadProductos(productosData);
         var ajax = new XMLHttpRequest();
         const outputData = new Array();

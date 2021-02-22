@@ -94,8 +94,6 @@ class Venta {
 					<button type="button" class="btn btn-danger" onclick="Venta.borrarVenta(${venta.id})">Borrar</button>
 				</div>
 			</div>`;
-            console.log("i=" + i);
-            //Venta.insertPrecio();
         }
         Venta.insertProductosUI(ventas);
 
@@ -120,9 +118,6 @@ class Venta {
         }
 
 
-    }
-    static insertPrecio() {
-        console.log("insernado precio");
     }
 
     //Crear venta
@@ -170,7 +165,6 @@ class Venta {
 
         console.log(cliente);
         let ajax = new XMLHttpRequest();
-        //ajax.overrideMimeType("application/json");
         ajax.open('POST', `../json/clientes.json`, true);
 
         ajax.setRequestHeader('Content-type', 'application/json; charset=utf-8');
@@ -208,7 +202,11 @@ class Venta {
         }
     }
 
+
     static addProductoCarrito(cantidad = 0) {
+        const inputProducto = document.getElementById("venta_producto");
+        const productosData = loadJSON("productos");
+        const productos = Producto.loadProductos(productosData);
         if (this.outputProducto.innerText == 'NONE') {
             this.outputProducto.innerText = '';
         }
@@ -218,6 +216,23 @@ class Venta {
                 <div class="cantidad_item_carrito d-inline">${cantidad}</div>
                 <a class="btn btn-danger btn-sm " href="#" role="button" onclick="event.target.parentElement.remove();">delete</a>
             </div>`;
+        let precio;
+        for (let i = 0; i < productos.length; i++) {
+            const producto = productos[i];
+            if (this.inputProducto.value.endsWith(producto.referencia)) {
+                console.log(producto.precio);
+                this.insertPrecio(producto.precio, cantidad);
+
+            }
+
+        }
+
+    }
+    static insertPrecio(precio = 0, cantidad = 0) {
+        document.querySelector(".precioTotal").innerHTML = `Total: ${precio * cantidad} €`;
+
+        console.log("insernado precio");
+        console.log(precio);
     }
 
     static cancelCarrito() {

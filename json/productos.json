@@ -1,13 +1,19 @@
 [{
-        "referencia": "1",
-        "descripcion": "Samsung LC49G93TSSUXEN Odyssey G9 - Monitor curvo de 49'' DQHD",
-        "familia": "Componentes",
-        "precio": 150
+        "referencia": 2,
+        "descripcion": "NGS Flame Black - Ratón Óptico 1000 dpi con Cable USB, Ratón para Ordenador o Portátil con 3 Botones, Ambidiestro, Negro ",
+        "familia": "componentes",
+        "precio": 10
     },
     {
-        "referencia": "2",
-        "descripcion": "NGS Flame Black - Ratón Óptico 1000 dpi con Cable USB, Ratón para Ordenador o Portátil con 3 Botones, Ambidiestro, Negro ",
-        "familia": "Componentes",
-        "precio": 10
+        "referencia": 3,
+        "descripcion": "Componente Muy Pro",
+        "familia": "componentes",
+        "precio": 2
+    },
+    {
+        "referencia": 4,
+        "descripcion": "Samsung LC49G93TSSUXEN Odyssey G9 - Monitor curvo de 49'' DQHD",
+        "familia": "componentes",
+        "precio": 150
     }
 ]
