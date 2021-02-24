@@ -30,8 +30,10 @@ class Cliente {
         const outputClientes = new Array();
         const clientes = clientesData[0];
         for (let i = 0; i < clientes.length; i++) {
-            const cliente = clientes[i];
-            outputClientes.push(new Cliente(cliente));
+            const clienteBruto = clientes[i];
+            const cliente = new Cliente(clienteBruto);
+            cliente.id = clienteBruto.id;
+            outputClientes.push(cliente);
         }
         return outputClientes;
     }

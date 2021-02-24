@@ -190,10 +190,11 @@ class Venta {
     static setClientes() {
         const clientesData = loadJSON("clientes");
         const clientes = Cliente.loadClientes(clientesData);
+
         for (let i = 0; i < clientes.length; i++) {
             const cliente = clientes[i];
             const option = document.createElement('option');
-            option.innerHTML = cliente.nombre;
+            option.innerHTML = `${cliente.id} - ${cliente.nombre}`;
             this.inputCliente.appendChild(option);
         }
     }
@@ -259,16 +260,65 @@ class Venta {
         }
     }
     static uploadVenta() {
-        const listaProducto = new Array();
+        const refProductos = new Array();
+        const productos = new Array();
+        const idCliente = this.ventaOutput.querySelector(".card-header h4").innerHTML[0];
+        let cliente;
+        let venta;
         let productosBruto = Venta.ventaOutput.getElementsByClassName('item');
+        const ventasData = loadJSON("clientes");
+        Venta.cacheVentas = Venta.loadVentas(ventasData);
+        var ajax = new XMLHttpRequest();
+        const outputData = new Array();
+
+        for (let i = 0; i < this.cacheVentas.length; i++) {
+            const ventasAntiguas = this.cacheVentas[i];
+            outputData.push(ventasAntiguas);
+
+        }
         for (let i = 0; i < productosBruto.length; i++) {
             const productoBruto = productosBruto[i];
-            listaProducto.push({
-                producto: productoBruto.querySelector('.item_carrito').textContent,
+            refProductos.push({
+                idproducto: productoBruto.querySelector('.item_carrito').textContent[productoBruto.querySelector('.item_carrito').textContent.length - 1],
                 cantidad: parseInt(productoBruto.querySelector('.cantidad_item_carrito').textContent)
             });
         }
-        console.log(listaProducto);
+        //console.log(idCliente);
+        //console.log(refProductos);
+        const clientesData = loadJSON("clientes")[0];
+        Cliente.numClientes = 0;
+        for (let i = 0; i < clientesData.length; i++) {
+            const clienteBruto = clientesData[i];
+            if (clienteBruto.id == idCliente) {
+                cliente = new Cliente(clienteBruto);
+                cliente.id = clienteBruto.id;
+                venta = new Venta(cliente);
+            }
+        }
+        const productosData = loadJSON("productos")[0];
+        for (let i = 0; i < refProductos.length; i++) {
+            const refProducto = refProductos[i].idproducto;
+            const cantidad = refProductos[i].cantidad;
+            for (let z = 0; z < productosData.length; z++) {
+                const productoAntiguo = productosData[z];
+                if (productoAntiguo.referencia == refProducto) {
+                    const producto = new Producto(productoAntiguo);
+                    producto.cantidad = cantidad; //Nose porque no funciona
+                    venta.addProducto(producto);
+                }
+            }
+        }
+
+        ajax.onreadystatechange = () => {
+            if (ajax.readyState == 4 && ajax.status == "200") {
+                console.log(outputData);
+            }
+        }
+        outputData.push(venta);
+        ajax.open("POST", "../php/post-venta.php?param=" + JSON.stringify(outputData), true);
+        ajax.send();
+
+
     }
 
     // Borrar Venta

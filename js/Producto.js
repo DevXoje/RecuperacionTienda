@@ -24,8 +24,10 @@ class Producto {
         const outputProductos = new Array();
         const productos = productosData[0];
         for (let i = 0; i < productos.length; i++) {
-            const producto = productos[i];
-            outputProductos.push(new Producto(producto));
+            const productoBruto = productos[i];
+            const producto = new Producto(productoBruto);
+            producto.referencia = productoBruto.referencia;
+            outputProductos.push(producto);
         }
         return outputProductos;
     }
