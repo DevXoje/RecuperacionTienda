@@ -13,13 +13,15 @@
                 "referencia": "01",
                 "descripcion": "Samsung LC49G93TSSUXEN Odyssey G9 - Monitor curvo de 49'' DQHD",
                 "familia": "Monitor",
-                "precio": 150
+                "precio": 150,
+                "cantidad": 2
             },
             {
                 "referencia": "02",
                 "descripcion": "NGS Flame Black - Ratón Óptico 1000 dpi con Cable USB, Ratón para Ordenador o Portátil con 3 Botones, Ambidiestro, Negro ",
                 "familia": "Raton",
-                "precio": 10
+                "precio": 10,
+                "cantidad": 1
             }
         ]
     },
@@ -38,13 +40,15 @@
                 "referencia": "03",
                 "descripcion": "SAMSUNG Galaxy M11 | Smartphone Dual SIM, Pantalla de 6,4'', Cámara 13 MP, 3 GB RAM, 32 GB ROM Ampliables, Batería 5.000 mAh, Android, Color Negro [Versión española] ",
                 "familia": "Smartphones",
-                "precio": 150
+                "precio": 150,
+                "cantidad": 3
             },
             {
                 "referencia": "04",
                 "descripcion": "XFX AMD Radeon RX RX-580P8DFD6 8GB Triple X Edition - Tarjeta gráfica Radeon Express, GDDR5,256BIT,DVI+HDMI+3DP,GTS",
                 "familia": "Componentes",
-                "precio": 10
+                "precio": 10,
+                "cantidad": 1
             }
         ]
     }

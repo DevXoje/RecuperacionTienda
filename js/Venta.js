@@ -8,6 +8,7 @@ class Venta {
     static btn_submit = document.getElementById('btn_submit');
     static ventaOutput = document.getElementById('ventaOutput');
     static numVentas = 0;
+    static cacheVentas = new Array();
     productos = new Array();
     cliente;
 
@@ -16,24 +17,30 @@ class Venta {
         this.id = ++Venta.numVentas;
     }
 
-    addProducto(producto = new Producto()) {
-        this.productos.push(producto);
+    addProducto(producto = new Producto(), cantidad = 0) {
+        const i = this.productos.push(producto);
+        this.productos[i - 1].cantidad = cantidad;
     }
 
     static writeCookie() {
-        console.log("writing cookie");
         const now = new Date();
-        const minutes = 1;
+        const minutes = 30;
         now.setTime(now.getTime() + (minutes * 60 * 1000));
         //cookievalue = escape(document.myform.customer.value) + ";"
         const cookievalue = Venta.outputCliente.textContent + ";"
 
         document.cookie = `name = ${cookievalue} expires=${now.toUTCString()};`;
-        setTimeout(() => {}, 1000);
-        console.log("Setting Cookies : " + "name=" + cookievalue);
+        setTimeout(() => {
+            alert("El carrito se vaciara automaticamente en 5 minutos");
+        }, ((minutes - 5) * 60 * 1000));
     }
 
     //Ver venta
+    static configShowVentas() {
+        const ventasData = loadJSON("ventas");
+        Venta.cacheVentas = Venta.loadVentas(ventasData);
+        Venta.printVentas(Venta.cacheVenta);
+    }
     static loadVentas(ventasData = [{ cliente: new Cliente(), productos: new Array() }]) {
         const outputventas = new Array();
         const ventas = ventasData[0];
@@ -47,18 +54,17 @@ class Venta {
                 email: ventaBruta.cliente.email,
                 contrasenya: ventaBruta.cliente.contrasenya
             }
-
             const cliente = new Cliente(dataCliente);
             const venta = new Venta(cliente);
-            //const producto = new Producto({ referencia: "", descripcion: "", familia: "", precio: 0 });
 
             for (let z = 0; z < ventaBruta.productos.length; z++) {
                 const producto = ventaBruta.productos[z];
 
-                venta.addProducto(new Producto(producto));
+                venta.addProducto(new Producto(producto), producto.cantidad);
             }
             outputventas.push(venta);
         }
+        console.log(outputventas);
 
         return outputventas;
     }
@@ -76,13 +82,13 @@ class Venta {
             referencia: "",
             descripcion: "",
             familia: "",
-            precio: 0
+            precio: 0,
+            cantidad: 0
         }]
 
     }]) {
-        for (let i = 0; i < ventas.length; i++) {
-            const venta = ventas[i];
-
+        for (let i = 0; i < this.cacheVentas.length; i++) {
+            const venta = this.cacheVentas[i];
             this.deckVentasWrapper.innerHTML += `
 			<div class="card mb-5" style="width: 18rem;">
   				<div class="card-header">${venta.cliente.nombre} -- ${venta.cliente.email} -- ${venta.id}</div>
@@ -90,13 +96,12 @@ class Venta {
  					</ul>
 				
 				<div class="card-footer btn-group">					
-					<button type="button" class="btn btn-warning">Modificar</button>
+					<button type="button" class="btn btn-warning" onclick="Venta.editarVenta(${venta.id})">Modificar</button>
 					<button type="button" class="btn btn-danger" onclick="Venta.borrarVenta(${venta.id})">Borrar</button>
 				</div>
 			</div>`;
         }
-        Venta.insertProductosUI(ventas);
-
+        Venta.insertProductosUI(this.cacheVentas);
 
 
     }
@@ -109,7 +114,9 @@ class Venta {
                 const producto = ventas[i].productos[j];
                 output.innerHTML += `
                 <div class="list-group-item">
-                    ${producto.descripcion}
+                    <div>${producto.descripcion}</div>
+                    <div>${producto.cantidad} X ${producto.precio}= $
+                    <div class="resultado">{producto.precio * producto.cantidad}</div> €</div>                    
                 </div>
                 `;
             }
@@ -136,7 +143,7 @@ class Venta {
                 this.inputCliente.disabled = true;
                 this.inputProducto.disabled = false;
                 this.ventaOutput.style.display = 'flex';
-                //Venta.writeCookie();
+                Venta.writeCookie();
             }
         });
         this.inputProducto.addEventListener('change', () => {
@@ -206,7 +213,15 @@ class Venta {
     static addProductoCarrito(cantidad = 0) {
         const inputProducto = document.getElementById("venta_producto");
         const productosData = loadJSON("productos");
+        Producto.numProductos = 0;
+        let precio = 0;
         const productos = Producto.loadProductos(productosData);
+        for (let i = 0; i < productos.length; i++) {
+            const producto = productos[i];
+            if (producto.referencia == this.inputProducto.value[this.inputProducto.value.length - 1]) {
+                precio = producto.precio;
+            }
+        }
         if (this.outputProducto.innerText == 'NONE') {
             this.outputProducto.innerText = '';
         }
@@ -214,25 +229,28 @@ class Venta {
             <div class="item">
                 <div class="item_carrito d-inline">${this.inputProducto.value}</div> x 
                 <div class="cantidad_item_carrito d-inline">${cantidad}</div>
-                <a class="btn btn-danger btn-sm " href="#" role="button" onclick="event.target.parentElement.remove();">delete</a>
+                <div class="resultado">${precio}</div>
+                <a class="btn btn-danger btn-sm " href="#" role="button" onclick="Venta.deleteProductoCarrito(event);">delete</a>
             </div>`;
-        let precio;
-        for (let i = 0; i < productos.length; i++) {
-            const producto = productos[i];
-            if (this.inputProducto.value.endsWith(producto.referencia)) {
-                console.log(producto.precio);
-                this.insertPrecio(producto.precio, cantidad);
-
-            }
-
-        }
+        this.actualizaPrecioUI();
 
     }
-    static insertPrecio(precio = 0, cantidad = 0) {
-        document.querySelector(".precioTotal").innerHTML = `Total: ${precio * cantidad} €`;
+    static deleteProductoCarrito(event = new Event()) {
+        event.target.parentElement.remove();
+        this.actualizaPrecioUI();
+    }
+    static actualizaPrecioUI() {
+        const resultados = this.ventaOutput.querySelectorAll(".resultado");
+        let total = 0;
+        for (let i = 0; i < resultados.length; i++) {
+            const resultado = resultados[i];
+            total += parseInt(resultado.innerHTML);
+        }
 
-        console.log("insernado precio");
-        console.log(precio);
+        this.ventaOutput.querySelector(".btn-primary").style.display = (total == 0) ? "none" : "inline-block";
+
+        document.querySelector(".precioTotal").innerHTML = `${total} €`;
+
     }
 
     static cancelCarrito() {
@@ -251,22 +269,6 @@ class Venta {
             });
         }
         console.log(listaProducto);
-
-        /*var newCliente;
-        const formElements = Cliente.formClientesWrapper.elements;
-        Cliente.formClientesWrapper.addEventListener("submit", (event) => {
-            newClienteData = {
-                nombre: formElements[0].value,
-                apellidos: formElements[1].value,
-                dni: formElements[2].value,
-                fechaNac: formElements[3].value,
-                email: formElements[4].value,
-                contrasenya: formElements[5].value
-            }
-            newCliente = new Cliente(newClienteData);
-            Cliente.uploadCliente(newCliente);
-            event.preventDefault();
-        }); */
     }
 
     // Borrar Venta
@@ -285,18 +287,19 @@ class Venta {
         }
     }
     static borrarVentaLogic(id = 0) {
-            let ajax = new XMLHttpRequest();
-            ajax.open("DELETE", "../json/clientes.json", false);
-            ajax.onload = function() {
-                let ventas = JSON.parse(ajax.responseText);
-                if (ajax.readyState == 4 && ajax.status == "200") {
-                    console.table(ventas);
-                } else {
-                    console.error(ventas);
-                }
+        let ajax = new XMLHttpRequest();
+        ajax.open("DELETE", "../json/clientes.json", false);
+        ajax.onload = function() {
+            let ventas = JSON.parse(ajax.responseText);
+            if (ajax.readyState == 4 && ajax.status == "200") {
+                console.table(ventas);
+            } else {
+                console.error(ventas);
             }
-            ajax.send(null);
         }
-        // Modificar Venta
+        ajax.send(null);
+    }
+
+    // Modificar Venta
 
 }

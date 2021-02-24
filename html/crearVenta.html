@@ -87,9 +87,11 @@
                 <li class="list-group-item" id="output_producto">
                 </li>
             </ul>
-            <div class="precioTotal"></div>
+            <div>Total:
+                <div class="precioTotal"></div>
+            </div>
             <div class="card-footer btn-group">
-                <button type="button" class="btn btn-primary" onclick="Venta.uploadVenta()">Guardar</button>
+                <button type="button" class="btn btn-primary" style="display: none;" onclick="Venta.uploadVenta()">Guardar</button>
                 <button type="button" class="btn btn-warning" onclick="Venta.cancelCarrito()">Vaciar</button>
             </div>
         </div>

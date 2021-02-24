@@ -23,7 +23,6 @@ class Producto {
     static loadProductos(productosData = [{ referencia: 0, descripcion: "", familia: "", precio: 0 }]) {
         const outputProductos = new Array();
         const productos = productosData[0];
-        //productos = productosData[0];
         for (let i = 0; i < productos.length; i++) {
             const producto = productos[i];
             outputProductos.push(new Producto(producto));
@@ -73,6 +72,7 @@ class Producto {
     static uploadProducto(producto = new Producto()) {
 
         const productosData = loadJSON("productos");
+
         this.cacheProductos = this.loadProductos(productosData);
         var ajax = new XMLHttpRequest();
         const outputData = new Array();
